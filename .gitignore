@@ -21,6 +21,7 @@
 .vs/
 .vscode/
 .idea/
+buildd/
 *.sln
 *.suo
 *.user
