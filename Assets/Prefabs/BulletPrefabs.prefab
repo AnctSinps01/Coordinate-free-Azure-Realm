@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 2533421448981212865}
   - component: {fileID: 618514777641589980}
   - component: {fileID: 3372231979021662048}
+  - component: {fileID: -8366215031334813084}
   m_Layer: 0
-  m_Name: Bullet_Prefabs
+  m_Name: BulletPrefabs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -189,3 +190,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.1875, y: 0.5625}
   m_EdgeRadius: 0
+--- !u!114 &-8366215031334813084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8360109090971904587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10098f4307505d489f2b4e41979c3d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletController
+  speed: 10

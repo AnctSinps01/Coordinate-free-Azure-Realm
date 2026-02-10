@@ -75,6 +75,7 @@ public class MapGenerator : MonoBehaviour
         GameObject wall = new GameObject(name);
         wall.transform.position = position;
         wall.transform.SetParent(transform);
+        wall.tag = "Wall";
         
         BoxCollider2D collider = wall.AddComponent<BoxCollider2D>();
         collider.size = size;
