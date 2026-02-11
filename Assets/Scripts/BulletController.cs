@@ -3,7 +3,7 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     [Header("移动设置")]
-    public float speed = 10f;
+    public float speed = 1f;
     
     private Rigidbody2D rb;
     
