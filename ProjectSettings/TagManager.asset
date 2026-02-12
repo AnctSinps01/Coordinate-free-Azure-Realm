@@ -48,6 +48,9 @@ TagManager:
   - name: Mobs
     uniqueID: 1157225467
     locked: 0
+  - name: Bullets
+    uniqueID: 2566375783
+    locked: 0
   - name: UIs
     uniqueID: 912213715
     locked: 0

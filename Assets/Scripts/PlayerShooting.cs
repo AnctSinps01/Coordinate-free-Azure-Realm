@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class PlayerShooting : MonoBehaviour
     void Update()
     {
         // 检测鼠标左键按下
-        if (Input.GetMouseButtonDown(0))
+        int pointerId = -1; // 鼠标左键对应 -1
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject(pointerId))
         {
             Shoot();
         }

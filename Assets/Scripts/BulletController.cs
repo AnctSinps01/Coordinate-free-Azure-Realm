@@ -15,7 +15,7 @@ public class BulletController : MonoBehaviour
         rb.linearVelocity = -transform.up * speed;
         
         // 20秒后自动销毁，防止内存泄漏
-        Destroy(gameObject, 20f);
+        Destroy(gameObject, 3f);
     }
     
     void OnTriggerEnter2D(Collider2D other)
