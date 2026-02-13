@@ -194,4 +194,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   maxHealth: 30
   currentHealth: 0
-  moveSpeed: 3
+  moveSpeed: 1

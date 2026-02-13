@@ -1,31 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class wasd_move : MonoBehaviour
+public class move_wasd : MonoBehaviour
 {
-    // 公开变量，可在Unity编辑器中进行调整
-    public float moveSpeed = 5f; // 定义物体的移动速度
-
-    // Start is called before the first frame update
+    [Header("移动设置")]
+    public float moveSpeed = 5f;
+    public float acceleration = 50f;
+    public float deceleration = 30f;
+    
+    private Rigidbody2D rb;
+    private Vector2 moveInput;
+    private Vector2 currentVelocity;
+    
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        // 获取水平方向的输入 (A/D 或 左/右箭头)
-        float horizontalInput = Input.GetAxis("Horizontal");
-        // 获取垂直方向的输入 (W/S 或 上/下箭头)
-        float verticalInput = Input.GetAxis("Vertical");
-
-        // 创建一个移动向量
-        Vector3 movement = new Vector3(horizontalInput, verticalInput, 0f);
-
-        // 根据输入移动物体
-        // Time.deltaTime 确保移动速度与帧率无关，表现更平滑
-        transform.Translate(movement * moveSpeed * Time.deltaTime);
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+        moveInput = new Vector2(x, y).normalized;
+    }
+    
+    void FixedUpdate()
+    {
+        Vector2 targetVelocity = moveInput * moveSpeed;
+        
+        if (moveInput != Vector2.zero)
+        {
+            currentVelocity = Vector2.MoveTowards(
+                currentVelocity,
+                targetVelocity,
+                acceleration * Time.fixedDeltaTime
+            );
+        }
+        else
+        {
+            currentVelocity = Vector2.MoveTowards(
+                currentVelocity,
+                Vector2.zero,
+                deceleration * Time.fixedDeltaTime
+            );
+        }
+        
+        rb.linearVelocity = currentVelocity;
     }
 }
