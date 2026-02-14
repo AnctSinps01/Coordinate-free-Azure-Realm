@@ -10,6 +10,9 @@ public class EnemyController : MonoBehaviour
     [Header("移动设置")]
     public float moveSpeed = 3f;
     
+    [Header("攻击设置")]
+    public float damage = 10f;
+    
     private Transform player;
     private Rigidbody2D rb;
     
@@ -52,5 +55,18 @@ public class EnemyController : MonoBehaviour
     void Die()
     {
         Destroy(gameObject);
+    }
+    
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        // 检测是否持续碰撞玩家（贴着时会持续造成伤害）
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+            }
+        }
     }
 }

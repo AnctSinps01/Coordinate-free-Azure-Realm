@@ -156,7 +156,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!95 &1752233058953525497
 Animator:
@@ -195,3 +195,4 @@ MonoBehaviour:
   maxHealth: 30
   currentHealth: 0
   moveSpeed: 1
+  damage: 10
