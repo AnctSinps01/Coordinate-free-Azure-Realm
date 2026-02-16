@@ -7,14 +7,49 @@ public class move_wasd : MonoBehaviour
     public float acceleration = 50f;
     public float deceleration = 30f;
     
+    [Header("射击时移速")]
+    [Range(0f, 1f)]
+    [Tooltip("射击时的移速比例（0-1），1表示不降速")]
+    public float shootingSpeedMultiplier = 0.3f;  // 默认30%
+    
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Vector2 currentVelocity;
+    private float currentSpeedMultiplier = 1f;    // 当前速度倍率
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        
+        // 订阅射击事件
+        PlayerShooting shooting = GetComponent<PlayerShooting>();
+        if (shooting != null)
+        {
+            shooting.OnShootStart += OnShootStart;
+            shooting.OnShootEnd += OnShootEnd;
+        }
+    }
+    
+    void OnDestroy()
+    {
+        // 取消订阅，防止内存泄漏
+        PlayerShooting shooting = GetComponent<PlayerShooting>();
+        if (shooting != null)
+        {
+            shooting.OnShootStart -= OnShootStart;
+            shooting.OnShootEnd -= OnShootEnd;
+        }
+    }
+    
+    void OnShootStart()
+    {
+        currentSpeedMultiplier = shootingSpeedMultiplier;
+    }
+    
+    void OnShootEnd()
+    {
+        currentSpeedMultiplier = 1f;
     }
     
     void Update()
@@ -26,7 +61,9 @@ public class move_wasd : MonoBehaviour
     
     void FixedUpdate()
     {
-        Vector2 targetVelocity = moveInput * moveSpeed;
+        // 根据射击状态应用速度倍率
+        float effectiveSpeed = moveSpeed * currentSpeedMultiplier;
+        Vector2 targetVelocity = moveInput * effectiveSpeed;
         
         if (moveInput != Vector2.zero)
         {
