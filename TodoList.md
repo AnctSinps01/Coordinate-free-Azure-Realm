@@ -5,8 +5,7 @@
 #### 基础
 
 * [ ] 地图
-  * [ ] 改用tilemap组件代替sprite renderer及其prefab
-  * [ ] 改用8x8/16x16大地快
+  * [x] 改用8x8大地快
   * [ ] shader测试生成算法，并实装
 * [x] 射击
   * [x] 长按连续射击
