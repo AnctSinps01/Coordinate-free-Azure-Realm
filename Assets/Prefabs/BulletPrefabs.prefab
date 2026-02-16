@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -8366215031334813084}
   m_Layer: 0
   m_Name: BulletPrefabs
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -203,3 +203,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletController
   speed: 1
+  damage: 10

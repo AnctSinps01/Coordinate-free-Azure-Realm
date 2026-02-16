@@ -24,6 +24,9 @@ public class PlayerHealth : MonoBehaviour
     // 事件：受伤时触发
     public event Action OnDamaged;
     
+    // 事件：死亡时触发
+    public event Action OnDied;
+    
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
     public bool IsInvincible => isInvincible;
@@ -38,6 +41,19 @@ public class PlayerHealth : MonoBehaviour
         
         currentHealth = maxHealth;
         // 初始化时触发一次事件，更新UI显示
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        
+        // 订阅游戏重启事件
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnGameRestart += OnGameRestart;
+    }
+    
+    /// <summary>
+    /// 游戏重启时恢复满血
+    /// </summary>
+    void OnGameRestart()
+    {
+        currentHealth = maxHealth;
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
     
@@ -133,6 +149,13 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("玩家死亡！");
-        // 后续实现死亡逻辑
+        OnDied?.Invoke();  // 触发死亡事件
+    }
+    
+    void OnDestroy()
+    {
+        // 取消订阅，防止内存泄漏
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnGameRestart -= OnGameRestart;
     }
 }

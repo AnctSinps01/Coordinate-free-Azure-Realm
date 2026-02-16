@@ -29,6 +29,20 @@ public class move_wasd : MonoBehaviour
             shooting.OnShootStart += OnShootStart;
             shooting.OnShootEnd += OnShootEnd;
         }
+        
+        // 订阅游戏重启事件
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnGameRestart += OnGameRestart;
+    }
+    
+    /// <summary>
+    /// 游戏重启时重置速度向量为零
+    /// </summary>
+    void OnGameRestart()
+    {
+        currentVelocity = Vector2.zero;
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
     }
     
     void OnDestroy()
@@ -40,6 +54,10 @@ public class move_wasd : MonoBehaviour
             shooting.OnShootStart -= OnShootStart;
             shooting.OnShootEnd -= OnShootEnd;
         }
+        
+        // 取消订阅游戏重启事件
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnGameRestart -= OnGameRestart;
     }
     
     void OnShootStart()

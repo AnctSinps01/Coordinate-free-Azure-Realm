@@ -40,4 +40,25 @@ public class MapGenerator : MonoBehaviour
             }
         }
     }
+    
+    /// <summary>
+    /// 清空所有地图瓦片
+    /// </summary>
+    public void ClearMap()
+    {
+        // 销毁所有子对象（地图瓦片）
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+    }
+    
+    /// <summary>
+    /// 重新生成地图
+    /// </summary>
+    public void RegenerateMap()
+    {
+        ClearMap();
+        GenerateMap();
+    }
 }

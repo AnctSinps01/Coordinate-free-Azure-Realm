@@ -98,6 +98,27 @@ public class EnemySpawner : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// 清空所有敌人
+    /// </summary>
+    public void ClearAllEnemies()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var enemy in enemies)
+        {
+            Destroy(enemy);
+        }
+    }
+    
+    /// <summary>
+    /// 重置生成器（清空计时器）
+    /// </summary>
+    public void Reset()
+    {
+        timer = 0f;
+        UpdateMapSize();
+    }
+    
     void OnDrawGizmos()
     {
         float gizmoWidth = currentWidth;
