@@ -10,18 +10,24 @@ public class move_wasd : MonoBehaviour
     [Header("射击时移速")]
     [Range(0f, 1f)]
     [Tooltip("射击时的移速比例（0-1），1表示不降速")]
-    public float shootingSpeedMultiplier = 0.3f;  // 默认30%
+    public float shootingSpeedMultiplier = 0.3f;
     
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Vector2 currentVelocity;
-    private float currentSpeedMultiplier = 1f;    // 当前速度倍率
-    private bool isDashing = false;               // 是否正在冲刺（通过事件订阅更新）
+    private float currentSpeedMultiplier = 1f;
+    private bool isDashing = false;
+    
+    // 基础移速备份
+    private float baseMoveSpeed;
+    // 当前移速倍率（来自升级系统）
+    private float upgradeSpeedMultiplier = 1f;
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        baseMoveSpeed = moveSpeed;
         
         // 订阅冲刺事件
         PlayerDash playerDash = GetComponent<PlayerDash>();
@@ -42,21 +48,13 @@ public class move_wasd : MonoBehaviour
         // 订阅游戏重启事件
         if (GameManager.Instance != null)
             GameManager.Instance.OnGameRestart += OnGameRestart;
-    }
-    
-    /// <summary>
-    /// 游戏重启时重置速度向量为零
-    /// </summary>
-    void OnGameRestart()
-    {
-        currentVelocity = Vector2.zero;
-        if (rb != null)
-            rb.linearVelocity = Vector2.zero;
+        
+        // 订阅移速升级事件
+        SubscribeToPlayerStats();
     }
     
     void OnDestroy()
     {
-        // 取消订阅冲刺事件
         PlayerDash playerDash = GetComponent<PlayerDash>();
         if (playerDash != null)
         {
@@ -64,7 +62,6 @@ public class move_wasd : MonoBehaviour
             playerDash.OnDashEnd -= OnDashEnd;
         }
         
-        // 取消订阅，防止内存泄漏
         PlayerShooting shooting = GetComponent<PlayerShooting>();
         if (shooting != null)
         {
@@ -72,9 +69,56 @@ public class move_wasd : MonoBehaviour
             shooting.OnShootEnd -= OnShootEnd;
         }
         
-        // 取消订阅游戏重启事件
         if (GameManager.Instance != null)
             GameManager.Instance.OnGameRestart -= OnGameRestart;
+        
+        UnsubscribeFromPlayerStats();
+    }
+    
+    void SubscribeToPlayerStats()
+    {
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.OnStatChanged += OnStatChanged;
+            UpdateMoveSpeedMultiplier();
+        }
+    }
+    
+    void UnsubscribeFromPlayerStats()
+    {
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.OnStatChanged -= OnStatChanged;
+        }
+    }
+    
+    void OnStatChanged(StatType statType, float newValue)
+    {
+        if (statType == StatType.MoveSpeed)
+        {
+            UpdateMoveSpeedMultiplier();
+        }
+    }
+    
+    void UpdateMoveSpeedMultiplier()
+    {
+        if (PlayerStats.Instance != null)
+        {
+            // 从PlayerStats获取移速倍率
+            float statsMoveSpeed = PlayerStats.Instance.MoveSpeed;
+            if (statsMoveSpeed > 0 && baseMoveSpeed > 0)
+            {
+                // 计算倍率：statsValue / baseValue
+                upgradeSpeedMultiplier = statsMoveSpeed / baseMoveSpeed;
+            }
+        }
+    }
+    
+    void OnGameRestart()
+    {
+        currentVelocity = Vector2.zero;
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
     }
     
     void OnShootStart()
@@ -87,17 +131,11 @@ public class move_wasd : MonoBehaviour
         currentSpeedMultiplier = 1f;
     }
     
-    /// <summary>
-    /// 冲刺开始事件回调
-    /// </summary>
     void OnDashStart(bool dashing)
     {
         isDashing = dashing;
     }
     
-    /// <summary>
-    /// 冲刺结束事件回调
-    /// </summary>
     void OnDashEnd(bool dashing)
     {
         isDashing = dashing;
@@ -112,15 +150,14 @@ public class move_wasd : MonoBehaviour
     
     void FixedUpdate()
     {
-        // 如果正在冲刺，让冲刺组件控制移动，不执行普通移动逻辑
         if (isDashing)
         {
             return;
         }
         
-        // 根据射击状态应用速度倍率
-        float effectiveSpeed = moveSpeed * currentSpeedMultiplier;
-        Vector2 targetVelocity = moveInput * effectiveSpeed;
+        // 计算最终移速：基础值 × 升级倍率 × 射击倍率
+        float finalSpeed = baseMoveSpeed * upgradeSpeedMultiplier * currentSpeedMultiplier;
+        Vector2 targetVelocity = moveInput * finalSpeed;
         
         if (moveInput != Vector2.zero)
         {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class EnemyController : MonoBehaviour
 {
@@ -12,6 +13,13 @@ public class EnemyController : MonoBehaviour
     
     [Header("攻击设置")]
     public float damage = 10f;
+    
+    [Header("经验值")]
+    [Tooltip("击败此敌人获得的经验值")]
+    public int xpValue = 1;
+    
+    // 事件：敌人死亡时触发（参数：敌人本身，经验值）
+    public static event Action<EnemyController, int> OnEnemyDied;
     
     private Transform player;
     private Rigidbody2D rb;
@@ -54,6 +62,9 @@ public class EnemyController : MonoBehaviour
     
     void Die()
     {
+        // 触发死亡事件（在销毁前触发，确保经验值系统能接收）
+        OnEnemyDied?.Invoke(this, xpValue);
+        
         Destroy(gameObject);
     }
     

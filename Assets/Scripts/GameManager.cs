@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [Header("升级面板引用")]
     public GameObject upgradePanel;
     public TextMeshProUGUI continueText;
+    public UpgradeTreeUI upgradeTreeUI;  // 技能树UI控制器
     
     [Header("玩家引用")]
     public PlayerHealth playerHealth;
@@ -75,6 +76,12 @@ public class GameManager : MonoBehaviour
         if (upgradePanel != null)
         {
             upgradePanel.SetActive(true);
+            
+            // 刷新技能树UI（显示可购买选项和当前经验值）
+            if (upgradeTreeUI != null)
+            {
+                upgradeTreeUI.Refresh();
+            }
             
             if (continueText != null)
                 continueText.text = "Press \"Space\" to Continue";
