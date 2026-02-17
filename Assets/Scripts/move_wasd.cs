@@ -16,11 +16,20 @@ public class move_wasd : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 currentVelocity;
     private float currentSpeedMultiplier = 1f;    // 当前速度倍率
+    private bool isDashing = false;               // 是否正在冲刺（通过事件订阅更新）
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        
+        // 订阅冲刺事件
+        PlayerDash playerDash = GetComponent<PlayerDash>();
+        if (playerDash != null)
+        {
+            playerDash.OnDashStart += OnDashStart;
+            playerDash.OnDashEnd += OnDashEnd;
+        }
         
         // 订阅射击事件
         PlayerShooting shooting = GetComponent<PlayerShooting>();
@@ -47,6 +56,14 @@ public class move_wasd : MonoBehaviour
     
     void OnDestroy()
     {
+        // 取消订阅冲刺事件
+        PlayerDash playerDash = GetComponent<PlayerDash>();
+        if (playerDash != null)
+        {
+            playerDash.OnDashStart -= OnDashStart;
+            playerDash.OnDashEnd -= OnDashEnd;
+        }
+        
         // 取消订阅，防止内存泄漏
         PlayerShooting shooting = GetComponent<PlayerShooting>();
         if (shooting != null)
@@ -70,6 +87,22 @@ public class move_wasd : MonoBehaviour
         currentSpeedMultiplier = 1f;
     }
     
+    /// <summary>
+    /// 冲刺开始事件回调
+    /// </summary>
+    void OnDashStart(bool dashing)
+    {
+        isDashing = dashing;
+    }
+    
+    /// <summary>
+    /// 冲刺结束事件回调
+    /// </summary>
+    void OnDashEnd(bool dashing)
+    {
+        isDashing = dashing;
+    }
+    
     void Update()
     {
         float x = Input.GetAxisRaw("Horizontal");
@@ -79,6 +112,12 @@ public class move_wasd : MonoBehaviour
     
     void FixedUpdate()
     {
+        // 如果正在冲刺，让冲刺组件控制移动，不执行普通移动逻辑
+        if (isDashing)
+        {
+            return;
+        }
+        
         // 根据射击状态应用速度倍率
         float effectiveSpeed = moveSpeed * currentSpeedMultiplier;
         Vector2 targetVelocity = moveInput * effectiveSpeed;
