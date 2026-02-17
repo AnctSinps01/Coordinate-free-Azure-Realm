@@ -52,7 +52,7 @@ public class MapGenerator : MonoBehaviour
             Destroy(transform.GetChild(i).gameObject);
         }
     }
-    
+
     /// <summary>
     /// 重新生成地图
     /// </summary>
