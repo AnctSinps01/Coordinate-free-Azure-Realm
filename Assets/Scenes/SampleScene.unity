@@ -2532,6 +2532,11 @@ MonoBehaviour:
   - {fileID: 6651045745494003907, guid: f7e931cfd1b6e9041bd77e85e1cecfe3, type: 3}
   - {fileID: 6651045745494003907, guid: 26f4fc102f910dd47a02ebc31b565df9, type: 3}
   - {fileID: 6651045745494003907, guid: 033d0b931daf212449ed0aeb7ed680ac, type: 3}
+  LandTilePrefabs:
+  - {fileID: 6651045745494003907, guid: 9c458c59052ab694ab04c06b74317493, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   FollowCamera: {fileID: 1921234650}
   width: 6
   height: 8

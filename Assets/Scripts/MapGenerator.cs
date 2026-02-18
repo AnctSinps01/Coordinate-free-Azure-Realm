@@ -42,6 +42,8 @@ public class MapGenerator : MonoBehaviour
 
     public GameObject[] RiverTilePrefabs = new GameObject[33];
 
+    public GameObject[] LandTilePrefabs = new GameObject[4];
+
 
     [Header("跟随的摄像机")]
     public GameObject FollowCamera;
@@ -76,7 +78,7 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
-        float Scale = 0.3f;
+        float Scale = 0.1f;
 
         Vector3 Center = FollowCamera.transform.position / 8.0f;
 
@@ -94,16 +96,6 @@ public class MapGenerator : MonoBehaviour
                 CurrTiles[new Vector2Int(x, y)] = GameObject.Find($"TileRiver_{x}_{y}");
             }
         }
-
-        // foreach (var kvp in CurrTiles) {
-        //     Vector2Int tilePos = kvp.Key;
-        //     GameObject tileObj = kvp.Value;
-
-        //     if (Math.Abs(tilePos.x - centerX) > 2 || tilePos.y - maxY > 1 || minY - tilePos.y > 1) {
-        //         Destroy(tileObj);
-        //         CurrTiles.Remove(tilePos);
-        //     }
-        // }
 
         // 创建临时列表存储需要移除的键
         List<Vector2Int> tilesToRemove = new List<Vector2Int>();
@@ -227,9 +219,7 @@ public class MapGenerator : MonoBehaviour
 
         if (GetRiver(scaledPos) < 0.5f) {
             
-            // GameObject tileBase = Instantiate(RiverTilePrefabs[32], new Vector3(x, y, 0) * 8.0f, Quaternion.identity);
-            // tileBase.transform.SetParent(transform);
-            // tileBase.name = $"TileRiver_{x}_{y}";
+            PlaceLandTile(x, y);
 
             return;
         }
@@ -258,10 +248,8 @@ public class MapGenerator : MonoBehaviour
         // 应用变换
         bool isFlipped = transType >= 4;
         float rotationAngle = transType % 4 * 90f;
-
         // 设置缩放实现镜像 (注意：这会影响所有子物体)
         tile.transform.localScale = new Vector3(isFlipped ? -1f : 1f, 1f, 1f);
-
         // 设置旋转
         tile.transform.localRotation = Quaternion.Euler(0, 0, rotationAngle * (isFlipped ? 1f : -1f));
         
@@ -278,6 +266,14 @@ public class MapGenerator : MonoBehaviour
             tile.transform.GetComponent<SpriteRenderer>().sortingOrder = 1;
             water.transform.GetComponent<SpriteRenderer>().sortingOrder = 0;
         }
+    }
+
+
+    public void PlaceLandTile(int x, int y)
+    {
+        GameObject tile = Instantiate(LandTilePrefabs[0], new Vector3(x, y, 0) * 8.0f, Quaternion.identity);
+        tile.transform.SetParent(transform);
+        tile.name = $"TileLand_{x}_{y}";
     }
 
 }
