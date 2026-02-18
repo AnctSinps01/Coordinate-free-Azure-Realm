@@ -122,10 +122,11 @@ public class GameManager : MonoBehaviour
         // 隐藏升级面板
         if (upgradePanel != null)
             upgradePanel.SetActive(false);
-        
+
         // 重新生成地图
         if (mapGenerator != null)
-            mapGenerator.RegenerateMap();
+            mapGenerator.ClearMap();
+            mapGenerator.GenerateMap();
         
         // 重置敌人生成器
         if (enemySpawner != null)

@@ -46,7 +46,7 @@ public class EnemySpawner : MonoBehaviour
             currentHeight = mapHeight;
         }
     }
-    
+
     void SpawnEnemy()
     {
         if (enemyPrefab == null)
@@ -60,7 +60,7 @@ public class EnemySpawner : MonoBehaviour
         Vector3 spawnPosition = GetRandomEdgePosition();
         Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
     }
-    
+
     Vector3 GetRandomEdgePosition()
     {
         int edge = Random.Range(0, 4);
@@ -109,7 +109,7 @@ public class EnemySpawner : MonoBehaviour
             Destroy(enemy);
         }
     }
-    
+
     /// <summary>
     /// 重置生成器（清空计时器）
     /// </summary>

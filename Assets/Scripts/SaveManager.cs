@@ -40,7 +40,7 @@ public class SaveData
         playerLevel = 1;
         totalKills = 0;
         totalPlayTime = 0f;
-        version = Application.version;
+        // version = Application.version;
     }
 }
 
